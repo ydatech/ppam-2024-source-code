@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "533692290821",
+    "project_id": "project-ppam-hello-dev",
+    "storage_bucket": "project-ppam-hello-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533692290821:android:c8214868ccc5870084096c",
+        "android_client_info": {
+          "package_name": "com.ppam.helloworld.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLT1qu1q0eYjPJLUkt212XMetoH8glwwA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
