@@ -7,7 +7,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "build:devclient:android": "eas build --platform android --profile development"
+    "build:devclient:android": "eas build --platform android --profile development",
+    "build:devclient:ios:simulator": "eas build --platform ios --profile devSimulator"
   },
   "dependencies": {
     "@react-native-firebase/app": "^19.1.1",
