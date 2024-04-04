@@ -18,7 +18,7 @@ export default function SignInScreen(){
             <TouchableOpacity onPress={handleSignOut} style={{padding:10, borderColor: "black", borderWidth:1}}>
                     <Text>Sign Out</Text>
             </TouchableOpacity>
-            <Link href="/" >Go To Landing</Link>
+           
         </View>
     );
 

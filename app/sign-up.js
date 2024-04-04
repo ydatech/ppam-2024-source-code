@@ -6,11 +6,13 @@ import { useState } from "react";
 export default function SignInScreen(){
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
+    const [repeatPassword,setRepeatPassword] = useState("");
     const [errors,setErrors] = useState({
         email:"",
-        password:""
+        password:"",
+        repeatPassword:""
     })
-    const {signIn} = useAuth();
+    const {signUp} = useAuth();
 
     const validate = ()=>{
 
@@ -28,6 +30,12 @@ export default function SignInScreen(){
             newErrors.password = "Password is required";
         }
 
+        if(!repeatPassword){
+            newErrors.password = "Repeat Password is required";
+        } else if(password !== repeatPassword){
+            newErrors.repeatPassword = "Repeat Password is not equal with password";
+        }
+
         
 
         return newErrors;
@@ -41,7 +49,7 @@ export default function SignInScreen(){
             console.log(findErrors)
             setErrors(findErrors)
         }else{
-            signIn(email,password).then(res=>{
+            signUp(email,password).then(res=>{
                 console.log("login success",res)
                 router.replace("/home");
             }).catch((error)=>{
@@ -62,7 +70,7 @@ export default function SignInScreen(){
     }
     return (
         <View style={styles.container}>
-            <Title style={styles.title}>Sign In</Title>
+            <Title style={styles.title}>Sign Up</Title>
             <View style>
             <TextInput 
                 left={<TextInput.Icon icon="email"/>}
@@ -91,14 +99,29 @@ export default function SignInScreen(){
                 error={errors.password !== ""}
                 secureTextEntry
             />
-            </View>
             <HelperText type="error" visible={errors.password !== ""}>{errors.password}</HelperText>
+             <TextInput
+                left={<TextInput.Icon icon="key"/>}
+                label="Repeat Password" 
+                value={repeatPassword}
+                mode="outlined" 
+                onChangeText={(password)=>{
+
+                    setRepeatPassword(password)
+                    setErrors(errors=>({...errors, repeatPassword: ""}))
+
+                }}
+                error={errors.repeatPassword !== ""}
+                secureTextEntry
+            />
+            </View>
+            <HelperText type="error" visible={errors.repeatPassword !== ""}>{errors.repeatPassword}</HelperText>
             <Button mode="contained" onPress={handleSignIn} style={styles.button}>
-                Sign In
+                Sign Up
             </Button>
            
            
-            <Link href="/sign-up" >Create a new acccount.</Link>
+            <Link href="/sign-in" >Already have account?</Link>
             <Link href="/" >Go To Landing</Link>
             
         </View>

@@ -17,11 +17,12 @@ export default function AuthProvider({children}){
 
     // Handle user state changes
     function onAuthStateChanged(user) {
+        console.log("onAuthStateChanged", user)
         setUser(user);
         if(!user)
-        setIsLoggedIn(false);
+            setIsLoggedIn(false);
         else
-        setIsLoggedIn(true);
+            setIsLoggedIn(true);
 
         if (initializing) setInitializing(false);
     }
@@ -33,16 +34,16 @@ export default function AuthProvider({children}){
 
     const signIn = (email,password)=>{
         // setIsLoggedIn(true);
-        auth().signInWithEmailAndPassword(email,password);
+        return auth().signInWithEmailAndPassword(email,password);
     }
 
     const signUp = (email,password) =>{
-        auth().signInWithEmailAndPassword(email,password);
+        return auth().createUserWithEmailAndPassword(email,password);
     }
 
     const signOut = ()=>{
         // setIsLoggedIn(false);
-        auth().signOut();
+        return auth().signOut();
     }
 
     console.log("user",user)
@@ -51,7 +52,8 @@ export default function AuthProvider({children}){
         isLoggedIn,
         user,
         signIn,
-        signOut
+        signOut,
+        signUp
     }}>
         {children}
     </AuthContext.Provider>
