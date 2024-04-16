@@ -1,7 +1,12 @@
 import { Text, Touchable, TouchableOpacity, View} from "react-native";
-import {Link, router} from "expo-router";
+import {Link, Redirect, router} from "expo-router";
+import { useAuth } from "../contexs/AuthProvider";
 export default function Index(){
+    const {user} = useAuth();
 
+    if(user){
+        return <Redirect href={"/home"}/>
+    }
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text style={{fontSize: 30}}>Hello World! React Router</Text>
