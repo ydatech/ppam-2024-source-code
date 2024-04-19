@@ -1,12 +1,13 @@
-import { Stack, router } from "expo-router"
-import { useState } from "react"
+import { Stack, router, useLocalSearchParams } from "expo-router"
+import { useEffect, useState } from "react"
 import { Text, View, StyleSheet} from "react-native"
 import { TextInput, HelperText, Button } from "react-native-paper"
 import firestore from '@react-native-firebase/firestore';
 import { useAuth } from "../../../contexs/AuthProvider";
 
-export default function ToDoCreate(){
-    const { user} = useAuth();
+export default function ToDoUpdate(){
+    const { user } = useAuth();
+    
     const [title,setTitle] = useState("");
     const [description,setDescription] = useState("");
     const [loading,setLoading] = useState(false);
@@ -15,6 +16,27 @@ export default function ToDoCreate(){
         description:""
     })
 
+    const { id} = useLocalSearchParams();
+
+    useEffect(()=>{
+
+        const todoDocRef = firestore()
+            .collection("users")
+            .doc(user?.uid)
+            .collection("todos")
+            .doc(id)
+        
+        todoDocRef.get().then((doc)=>{
+
+            if(doc.exists){
+                const data = doc.data();
+                setTitle(data.title);
+                setDescription(data.description);
+                
+            }
+        });
+      
+    },[id, user?.uid])
     const validate = ()=>{
 
         let newErrors = {
@@ -39,7 +61,7 @@ export default function ToDoCreate(){
 
     }
 
-    const handleCreate = async ()=>{
+    const handleUpdate = async ()=>{
         const findErrors = validate();
 
         if(Object.values(findErrors).some(value=> value !== "")){
@@ -47,14 +69,19 @@ export default function ToDoCreate(){
             setErrors(findErrors)
         }else{
             setLoading(true)
-             const todoColRef =  firestore().collection("users").doc(user.uid).collection("todos");
+             const todoDocRef =  firestore()
+             .collection("users")
+             .doc(user.uid)
+             .collection("todos")
+             .doc(id);
 
-            await todoColRef.add({
+            await todoDocRef.set({
                 title,
-                description,
-                created_at: firestore.FieldValue.serverTimestamp(),
-                updated_at: null,
-             })
+                description,  
+                updated_at: firestore.FieldValue.serverTimestamp(),
+             }, {
+                merge: true
+            })
 
              router.back();
             
@@ -65,7 +92,7 @@ export default function ToDoCreate(){
     return <View style={styles.container}>
         <Stack.Screen
         options={{
-            title : "Create To Do"
+            title : "Update To Do"
         }}
         />
         <TextInput
@@ -101,8 +128,8 @@ export default function ToDoCreate(){
 
             <Button 
             loading={loading}
-            onPress={handleCreate} 
-            mode="contained" icon="content-save">Create</Button>
+            onPress={handleUpdate} 
+            mode="contained" icon="content-save">Update</Button>
     </View>
 }
 

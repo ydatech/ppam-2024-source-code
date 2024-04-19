@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, StyleSheet, FlatList} from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, FlatList, Alert} from "react-native";
 
 import {Link, Stack, router} from "expo-router";
 import { useAuth } from "../../contexs/AuthProvider";
@@ -25,22 +25,40 @@ export default function SignInScreen(){
            })
            setData(newData)
         })
-        // .get().then((querySnapshot)=>{
-        //     console.log(querySnapshot.size)
-        //     querySnapshot.docs.forEach(doc=>{
-        //         console.log("document:", doc.id, doc.data().title)
-        //     })
-        // })
+        
         return ()=> subscriber();
     },[user?.uid])
     const handleSignOut = ()=>{
         signOut();
     }
+
+    const handleDelete = item => ()=>{
+        Alert.alert('Delete Confirmation', "Are you sure want to delete this todo?",[
+            {
+                text: "Cancel",
+                onPress:()=>{},
+                style:"cancel"
+            },
+            {
+                text: "Yes",
+                onPress: ()=>{
+                   const docRef = firestore()
+                    .collection("users")
+                    .doc(user?.uid)
+                    .collection("todos")
+                    .doc(item.id);
+
+                    docRef.delete();
+                }
+            }
+        ])
+    }
     return (
         <View style={{ flex: 1 }}>
             <Stack.Screen
                 options={{
-                    title: "To Do List"
+                    title: "To Do List",
+                    headerRight:()=> <IconButton onPress={handleSignOut} icon="logout-variant"/>
                 }}
             />
             {/* <Text style={{fontSize: 30}}>Home Screen</Text>
@@ -55,13 +73,17 @@ export default function SignInScreen(){
                     title={item.title}
                     description={item.description}
                     right={(props)=>{
-                        console.log(props)
+            
                             return <View style={[props.style, styles.actionBtns]}>
+                                    <Link href={`/todo/update?id=${item.id}`}  asChild>
+                                        <IconButton 
+                                        icon="pencil"
+                
+                                        />
+                                    </Link>
                                     <IconButton 
-                                    icon="pencil"
-                                    />
-                                    <IconButton 
-                                    icon="delete"
+                                         icon="delete"
+                                         onPress={handleDelete(item)}
                                     />
                             </View>
                     }}
